@@ -108,30 +108,44 @@ class AwesomeProject extends Component {
         this.animationState.circleY.setValue(0);
         this.animationState.circleOpacity.setValue(0);
         Animated.sequence([
-            Animated.timing(
-                this.animationState.circleOpacity,
-                {
-                    duration: 3000,
-                    toValue: 1,
-                    Easing: Easing.bezier(0.15, 0.93, 0.5, 0.2),
-                }
-            ),
-            Animated.timing(
-                this.animationState.circle,
-                {
-                    duration: 5000,
-                    toValue: 50,
-                    Easing: Easing.bezier(0.15, 0.93, 0.5, 0.2),
-                }
-            ),
-            Animated.timing(
-                this.animationState.circleOpacity,
-                {
-                    duration: 3000,
-                    toValue: 0,
-                    Easing: Easing.bezier(0.15, 0.93, 0.5, 0.2),
-                }
-            ),
+            Animated.parallel([
+                Animated.timing(
+                    this.animationState.circleOpacity,
+                    {
+                        duration: 3000,
+                        toValue: 1,
+                        Easing: Easing.bezier(0.15, 0.93, 0.5, 0.2),
+                    }
+                ),
+                Animated.timing(
+                    this.animationState.circle,
+                    {
+                        duration: 3000,
+                        toValue: 40,
+                        Easing: Easing.bezier(0.15, 0.93, 0.5, 0.2),
+                    }
+                ),
+            ]),
+            Animated.delay(1000),
+            Animated.parallel([
+                Animated.timing(
+                    this.animationState.circleOpacity,
+                    {
+                        duration: 3000,
+                        toValue: 0,
+                        Easing: Easing.bezier(0.15, 0.93, 0.5, 0.2),
+                    }
+                ),
+                Animated.timing(
+                    this.animationState.circle,
+                    {
+                        duration: 3000,
+                        toValue: 70,
+                        Easing: Easing.bezier(0.15, 0.93, 0.5, 0.2),
+                    }
+                ),
+            ]),
+
         ]).start(() => {
             this.setState({
                 circleArr: this._getCircleComp()
