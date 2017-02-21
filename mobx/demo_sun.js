@@ -20,7 +20,16 @@ import {
     PanResponder,
     Dimensions,
     ListView,
+    ScrollView,
+    ART,
 } from 'react-native';
+var ReactART = require('ReactNativeART');
+// var {
+//     Group,
+//     Shape,
+//     Surface,
+//     Transform
+// } = ReactART;
 
 const width = Dimensions.get('window').width;
 
@@ -31,7 +40,11 @@ export default class Demo extends Component {
     }
 
     render() {
-        return (<AwesomeProject  > </AwesomeProject>)
+        return (
+            <ScrollView>
+                <AwesomeProject > </AwesomeProject>
+            </ScrollView>
+        )
     }
 }
 
@@ -51,15 +64,17 @@ class AwesomeProject extends Component {
         });
         rowsData[0].borderWidth = 5;
         this.state = {
-            cloudPostionX: new Animated.Value(0),
             cloudArr: this._getCloud(),
             circleArr: this._getCircleComp(),
+            dataSource: ds.cloneWithRows(rowsData),
+            followerLeft: 0,
+        }
+        this.animationState = {
+            cloudPostionX: new Animated.Value(0),
             circle: new Animated.Value(0),
             circleY: new Animated.Value(0),
             circleOpacity: new Animated.Value(0),
             light: new Animated.Value(0),
-            dataSource: ds.cloneWithRows(rowsData),
-            followerLeft: 0,
         }
         rowDataLength = rowsData.length
         offset = rowDataLength * gridWidth - width;
@@ -76,9 +91,9 @@ class AwesomeProject extends Component {
     }
 
     _lightRollBack() {
-        this.state.light.setValue(0);
+        this.animationState.light.setValue(0);
         Animated.timing(
-            this.state.light,
+            this.animationState.light,
             {
                 toValue: 1,
                 duration: 10000,
@@ -89,12 +104,12 @@ class AwesomeProject extends Component {
     }
 
     _circleRollBack() {
-        this.state.circle.setValue(0);
-        this.state.circleY.setValue(0);
-        this.state.circleOpacity.setValue(0);
+        this.animationState.circle.setValue(0);
+        this.animationState.circleY.setValue(0);
+        this.animationState.circleOpacity.setValue(0);
         Animated.sequence([
             Animated.timing(
-                this.state.circleOpacity,
+                this.animationState.circleOpacity,
                 {
                     duration: 3000,
                     toValue: 1,
@@ -102,7 +117,7 @@ class AwesomeProject extends Component {
                 }
             ),
             Animated.timing(
-                this.state.circle,
+                this.animationState.circle,
                 {
                     duration: 5000,
                     toValue: 50,
@@ -110,7 +125,7 @@ class AwesomeProject extends Component {
                 }
             ),
             Animated.timing(
-                this.state.circleOpacity,
+                this.animationState.circleOpacity,
                 {
                     duration: 3000,
                     toValue: 0,
@@ -127,9 +142,9 @@ class AwesomeProject extends Component {
     }
 
     _rollBack() {
-        this.state.cloudPostionX.setValue(0);
+        this.animationState.cloudPostionX.setValue(0);
         Animated.timing(
-            this.state.cloudPostionX,
+            this.animationState.cloudPostionX,
             {
                 duration: 15000,
                 toValue: 1,
@@ -226,19 +241,20 @@ class AwesomeProject extends Component {
     getSunComp() {
         return (
             <Animated.View style={[styles.lightViewStyle,{transform: [{
-                    rotateZ: this.state.light.interpolate({
+                    rotateZ: this.animationState.light.interpolate({
                         inputRange: [0, 1],
                         outputRange: ['0deg', '360deg'],
                     })
             }]}]}>
-                <Image style={[styles.lightStyle]} source={require('../assets/light.png')} />
+                <Image style={[styles.lightStyle]} source={require('../assets/light.png')}/>
             </Animated.View>
         );
     }
 
     getCircleComp() {
         return (
-            <Animated.View style={[{opacity: this.state.circleOpacity, position: 'absolute', left: this.state.circle, top: this.state.circle}]}>
+            <Animated.View
+                style={[{opacity: this.animationState.circleOpacity, position: 'absolute', left: this.animationState.circle, top: this.animationState.circle}]}>
                 {this.state.circleArr}
             </Animated.View>
         );
@@ -247,8 +263,8 @@ class AwesomeProject extends Component {
     _getCircleComp() {
         let resArr = [];
         let len = 5;
-        while( len --) {
-            let comp = (<View key={len} style={[styles.circleStyle, this.getCircleStyle()]} />);
+        while (len--) {
+            let comp = (<View key={len} style={[styles.circleStyle, this.getCircleStyle()]}/>);
             resArr.push(comp)
         }
 
@@ -277,7 +293,7 @@ class AwesomeProject extends Component {
     getCloudComp() {
         return (
             <Animated.View style={[{transform: [{
-                    translateX: this.state.cloudPostionX.interpolate({
+                    translateX: this.animationState.cloudPostionX.interpolate({
                         inputRange: [0, 1],
                         outputRange: [-400, 350],
                     }),
@@ -290,8 +306,8 @@ class AwesomeProject extends Component {
     _getCloud() {
         let resArr = [];
         let len = 3;
-        while( len --) {
-            let comp = (<Image key={len} style={[styles.imageStyle, this._getCloudStyle()]} source={this.getImage()} />);
+        while (len--) {
+            let comp = (<Image key={len} style={[styles.imageStyle, this._getCloudStyle()]} source={this.getImage()}/>);
             resArr.push(comp)
         }
 
@@ -299,7 +315,7 @@ class AwesomeProject extends Component {
     }
 
     getImage() {
-        if (! this.image) {
+        if (!this.image) {
             this.image = require('../assets/cloud.png');
         }
 
@@ -330,7 +346,8 @@ class AwesomeProject extends Component {
 
 var styles = StyleSheet.create({
     container: {
-        flex: 1,
+        // flex: 1,
+        height: 1000,
         // justifyContent: 'center',
         // alignItems: 'center',
         backgroundColor: '#73B9FF'
