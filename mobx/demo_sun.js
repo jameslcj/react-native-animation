@@ -22,6 +22,7 @@ import {
     ListView,
     ScrollView,
     ART,
+    WebView,
 } from 'react-native';
 var ReactART = require('ReactNativeART');
 // var {
@@ -30,6 +31,8 @@ var ReactART = require('ReactNativeART');
 //     Surface,
 //     Transform
 // } = ReactART;
+require('../assets/html5/bg.jpg');
+require('../assets/html5/ParticleSmoke.png');
 
 const width = Dimensions.get('window').width;
 
@@ -41,7 +44,7 @@ export default class Demo extends Component {
 
     render() {
         return (
-            <ScrollView>
+            <ScrollView bounces={false}>
                 <AwesomeProject > </AwesomeProject>
             </ScrollView>
         )
@@ -176,13 +179,24 @@ class AwesomeProject extends Component {
     render() {
         return (
             <View style={styles.container}>
+                {this.getWebView()}
+                <View style={{position: 'absolute', top: 0, left: 0}}>
                 {this.getSunComp()}
                 {this.getCircleComp()}
                 {this.getCloudComp()}
                 {this.getListView()}
                 {this.getFollower()}
+                </View>
             </View>
         );
+    }
+
+    getWebView() {
+        return <WebView
+            automaticallyAdjustContentInsets={true}
+            javaScriptEnabled={true}
+            source={require('../assets/html5/snow.html')}
+        ></WebView>
     }
 
     getListView() {
@@ -219,7 +233,7 @@ class AwesomeProject extends Component {
             dataSource: ds.cloneWithRows(newDataArr),
             followerLeft: left
         })
-        console.log(param.nativeEvent.contentOffset, left)
+        // console.log(param.nativeEvent.contentOffset, left)
     }
 
     _cloneData() {
@@ -300,7 +314,7 @@ class AwesomeProject extends Component {
             borderRadius: size,
             opacity: opacity > 0.6 ? 0.6 : opacity,
         }
-        console.log(objStyle)
+        // console.log(objStyle)
         return objStyle;
     }
 
@@ -348,7 +362,7 @@ class AwesomeProject extends Component {
             left: this.getRandom(leftRange),
             top: this.getRandom(topRange),
         }
-        console.log(styleObj)
+        // console.log(styleObj)
 
         return styleObj;
     }
